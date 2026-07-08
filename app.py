@@ -10,8 +10,15 @@ script_dir = os.path.dirname(os.path.abspath(__file__))
 str.title("🏡 House Price Prediction Web App")
 str.write("Enter the house details below to estimate its market price instantly.")
 
-# 3. Load our trained model using a bulletproof absolute path
-model_path = os.path.join(script_dir, 'models', 'best_model.pkl')
+# 3. Dynamic Model Loading (Works perfectly for BOTH Local Mac and GitHub Cloud)
+local_path = os.path.join(script_dir, 'models', 'best_model.pkl')
+cloud_path = os.path.join(script_dir, 'best_model.pkl')
+
+if os.path.exists(local_path):
+    model_path = local_path
+else:
+    model_path = cloud_path
+
 with open(model_path, 'rb') as file:
     model = pickle.load(file)
 
@@ -37,10 +44,7 @@ str.markdown("---")
 # 5. Prediction Trigger
 str.subheader("🎯 Step 2: Generate Evaluation")
 
-# Create a clean row for our button
 if str.button("🚀 Calculate Estimated House Price"):
-    
-    # Put the user inputs into a small DataFrame so the model can read it
     input_data = pd.DataFrame([{
         'Area': area,
         'Bedrooms': bedrooms,
@@ -50,9 +54,7 @@ if str.button("🚀 Calculate Estimated House Price"):
         'Property_Type': prop_type
     }])
     
-    # Send the raw data into our saved pipeline factory
     predicted_price = model.predict(input_data)[0]
     
-    # Display the final valuation beautifully on screen
-    str.balloons() # Throws a fun celebration effect on screen!
+    str.balloons()
     str.success(f"📊 Estimated Property Valuation: **₹{predicted_price:,.2f}**")

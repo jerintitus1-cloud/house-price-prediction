@@ -3,22 +3,21 @@ import os
 import pickle
 import pandas as pd
 
-# Force Streamlit to focus on the correct folder path
+# 1. Force absolute tracking based on where app.py lives
 script_dir = os.path.dirname(os.path.abspath(__file__))
-os.chdir(script_dir)
 
-# 1. App Header
+# 2. App Header
 str.title("🏡 House Price Prediction Web App")
 str.write("Enter the house details below to estimate its market price instantly.")
 
-# 2. Load our trained model
-model_path = 'models/best_model.pkl'
+# 3. Load our trained model using a bulletproof absolute path
+model_path = os.path.join(script_dir, 'models', 'best_model.pkl')
 with open(model_path, 'rb') as file:
     model = pickle.load(file)
 
 str.markdown("---")
 
-# 3. User Input Forms
+# 4. User Input Forms
 str.subheader("📋 Step 1: Provide House Specifications")
 
 col1, col2 = str.columns(2)
@@ -35,9 +34,7 @@ with col2:
 
 str.markdown("---")
 
-# ----------------------------------------
-# NEW CODE FOR STEP 4: Prediction Trigger
-# ----------------------------------------
+# 5. Prediction Trigger
 str.subheader("🎯 Step 2: Generate Evaluation")
 
 # Create a clean row for our button
@@ -59,4 +56,3 @@ if str.button("🚀 Calculate Estimated House Price"):
     # Display the final valuation beautifully on screen
     str.balloons() # Throws a fun celebration effect on screen!
     str.success(f"📊 Estimated Property Valuation: **₹{predicted_price:,.2f}**")
-

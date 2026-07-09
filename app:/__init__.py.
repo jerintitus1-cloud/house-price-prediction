@@ -3,16 +3,18 @@ import os
 import pickle
 import pandas as pd
 
-# 1. Force absolute tracking based on where app.py lives
-script_dir = os.path.dirname(os.path.abspath(__file__))
+# 1. Force absolute tracking based on where main_interface.py lives
+# .parent.parent logic ensures we step out of 'app/' into the root workspace
+current_dir = os.path.dirname(os.path.abspath(__file__))
+root_dir = os.path.dirname(current_dir)
 
 # 2. App Header
 str.title("🏡 House Price Prediction Web App")
 str.write("Enter the house details below to estimate its market price instantly.")
 
-# 3. Dynamic Model Loading (Works perfectly for BOTH Local Mac and GitHub Cloud)
-local_path = os.path.join(script_dir, 'models', 'best_model.pkl')
-cloud_path = os.path.join(script_dir, 'best_model.pkl')
+# 3. Dynamic Model Loading (Looks across root structures flawlessly)
+local_path = os.path.join(root_dir, 'models', 'best_model.pkl')
+cloud_path = os.path.join(root_dir, 'best_model.pkl')
 
 if os.path.exists(local_path):
     model_path = local_path
@@ -57,4 +59,4 @@ if str.button("🚀 Calculate Estimated House Price"):
     predicted_price = model.predict(input_data)[0]
     
     str.balloons()
-   
+    str.success(f"📊 Estimated Property Valuation: **₹{predicted_price:,.2f}**")

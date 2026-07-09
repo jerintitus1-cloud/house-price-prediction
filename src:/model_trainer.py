@@ -21,3 +21,12 @@ def export_model(model_pipeline, output_directory, filename='best_model.pkl'):
     with open(target_path, 'wb') as file:
         pickle.dump(model_pipeline, file)
     print(f"✅ Production engine exported successfully to: {target_path}")
+
+    # Look inside 'models' first, fallback to root if deployed differently on the cloud
+local_path = os.path.join(script_dir, 'models', 'best_model.pkl')
+cloud_path = os.path.join(script_dir, 'best_model.pkl')
+
+if os.path.exists(local_path):
+    model_path = local_path
+else:
+    model_path = cloud_path
